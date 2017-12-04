@@ -12,7 +12,6 @@ DAG_PATH = os.path.join(
 
 DAG_FILES = [f for f in os.listdir(DAG_PATH) if f.endswith('airflowfile.py')]
 
-
 @pytest.mark.parametrize('dag_file', DAG_FILES)
 def test_dag_integrity(dag_file):
     """Import dag files and check for DAG."""
