@@ -10,5 +10,7 @@ jobs:
         - airflow initdb
         - coverage run -m pytest integrity_tests/*
     - stage: mock_pipeline_tests
+      install:
+        - pip install -r mock_pipeline_tests/requirements.txt
       script:
-        - echo "HELLO"
+        - coverage run -m pytest mock_pipeline_tests/*
