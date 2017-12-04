@@ -1,8 +1,14 @@
 language: python
 python:
   - "3.5"
-install:
-  - pip install -r integrity_tests/requirements.txt
-script:
-  - airflow initdb
-  - coverage run -m pytest integrity_tests/*
+jobs:
+  include:
+    - stage: integrity_tests
+      install:
+        - pip install -r integrity_tests/requirements.txt
+      script:
+        - airflow initdb
+        - coverage run -m pytest integrity_tests/*
+    - stage: mock_pipeline_tests
+      script:
+        - echo "HELLO"
