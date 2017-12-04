@@ -7,7 +7,7 @@ import pytest
 from airflow import models as af_models
 
 DAG_PATH = os.path.join(
-    os.path.dirname(__file__), '..', '..'
+    os.path.dirname(__file__), '..', 'dags', 'dev'
 )
 
 DAG_FILES = [f for f in os.listdir(DAG_PATH) if f.endswith('airflowfile.py')]
