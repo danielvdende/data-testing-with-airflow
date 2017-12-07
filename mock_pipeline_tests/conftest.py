@@ -1,7 +1,6 @@
 import pytest
 from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StructField, DoubleType, StringType, IntegerType, DateType, BooleanType, \
-    FloatType
+from pyspark.sql.types import StructType, StructField, DoubleType, StringType, DateType, BooleanType
 from random import uniform, sample, randint
 from datetime import date
 
@@ -93,7 +92,6 @@ def spark(request):
 
     populate_transaction_a(spark)
     populate_transaction_b(spark)
-    populate_currency(spark)
     populate_account_info(spark)
     populate_countries(spark)
 
