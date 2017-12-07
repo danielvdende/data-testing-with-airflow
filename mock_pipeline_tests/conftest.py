@@ -37,7 +37,7 @@ ACCOUNT_INFO_ROWS = [
 
 def generate_transactions(number):
     transactions = []
-    for x in xrange(0, number):
+    for x in range(0, number):
         parties = sample(ACCOUNT_INFO_ROWS, 2)
         transactions.append(("2017-01-{0}".format(randint(1,31)), parties[0][0], parties[1][0], round(uniform(0, 1000), 2)))
     return transactions
