@@ -3,6 +3,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, DoubleType, StringType, IntegerType, DateType, BooleanType, \
     FloatType
 from random import uniform, sample, randint
+from datetime import date
 
 SCHEMA_TRANSACTIONS = StructType([
     StructField('dt', DateType()),
@@ -39,7 +40,7 @@ def generate_transactions(number):
     transactions = []
     for x in range(0, number):
         parties = sample(ACCOUNT_INFO_ROWS, 2)
-        transactions.append(("2017-01-{0}".format(randint(1,31)), parties[0][0], parties[1][0], round(uniform(0, 1000), 2)))
+        transactions.append((date(2017,1,randint(1,31)), parties[0][0], parties[1][0], round(uniform(0, 1000), 2)))
     return transactions
 
 def populate_transaction_a(spark):
