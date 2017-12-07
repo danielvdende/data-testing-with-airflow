@@ -51,4 +51,5 @@ t3 = BashOperator(
     dag=dag)
 
 t2.set_upstream(t1)
-t3.set_upstream(t1)
+t2.set_downstream(t3)
+t3.set_downstream(t1)
