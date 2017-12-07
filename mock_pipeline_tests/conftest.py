@@ -35,6 +35,7 @@ ACCOUNT_INFO_ROWS = [
     ("NK2", "Kim Jong Un Investment", "NK")
 ]
 
+
 def generate_transactions(number):
     transactions = []
     for x in range(0, number):
@@ -42,15 +43,18 @@ def generate_transactions(number):
         transactions.append((date(2017,1,randint(1,31)), parties[0][0], parties[1][0], round(uniform(0, 1000), 2)))
     return transactions
 
+
 def populate_transaction_a(spark):
     transaction_rows = generate_transactions(1000)
     spark.createDataFrame(transaction_rows, SCHEMA_TRANSACTIONS) \
         .write.saveAsTable('transaction_a.transactions', format='parquet', mode='overwrite')
 
+
 def populate_transaction_b(spark):
     transaction_rows = generate_transactions(1000)
     spark.createDataFrame(transaction_rows, SCHEMA_TRANSACTIONS) \
         .write.saveAsTable('transaction_b.transactions', format='parquet', mode='overwrite')
+
 
 def populate_account_info(spark):
     account_info_rows = spark.sparkContext.parallelize([
@@ -68,6 +72,7 @@ def populate_account_info(spark):
     spark.createDataFrame(account_info_rows, SCHEMA_ACCOUNT_INFO) \
         .write.saveAsTable('app.account_info', format='parquet', mode='overwrite')
 
+
 def populate_countries(spark):
     countries_rows = spark.sparkContext.parallelize([
         ("NK", False), # North Korea
@@ -77,6 +82,7 @@ def populate_countries(spark):
     ])
     spark.createDataFrame(countries_rows, SCHEMA_COUNTRIES) \
         .write.saveAsTable('app.countries', format='parquet', mode='overwrite')
+
 
 @pytest.fixture(scope='session')
 def spark(request):
