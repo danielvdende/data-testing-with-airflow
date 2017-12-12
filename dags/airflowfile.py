@@ -57,7 +57,7 @@ default_args = {
 }
 
 dag = DAG(
-    'awesome_dag',
+    'awesome_dag_{}'.format(ENVIRONMENT),
     schedule_interval="@once",
     default_args=default_args,
     catchup=False
@@ -116,6 +116,22 @@ test_filter_countries = BashOperator(
         directory=TESTS_DIRECTORY,
         script='test_filter_countries.py'),
     dag=dag)
+
+# Trigger the next evironment based on current environment
+if ENVIRONMENT != 'prd':
+    if ENVIRONMENT == 'dev':
+        trigger_next_environment_deploy = TriggerDagRunOperator(task_id='trigger_next_environment_deploy',
+                                                                python_callable=lambda context, dag_run: dag_run,
+                                                                trigger_dag_id="app_tst",
+                                                                dag=dag)
+        test_filter_countries.set_downstream(trigger_next_environment_deploy)
+
+    if ENVIRONMENT == 'tst':
+        trigger_next_environment_deploy = TriggerDagRunOperator(task_id='trigger_next_environment_deploy',
+                                                                python_callable=lambda context, dag_run: dag_run,
+                                                                trigger_dag_id="app_acc",
+                                                                dag=dag)
+        test_filter_countries.set_downstream(trigger_next_environment_deploy)
 
 # Set order of tasks
 union_transactions.set_downstream(test_union_transactions)
