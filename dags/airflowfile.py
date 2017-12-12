@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
@@ -62,10 +63,6 @@ dag = DAG(
     catchup=False
 )
 
-
-
-
-
 # Launch Spark Submit job to union transactions
 union_transactions = SparkSubmitOperator(
     dag=dag,
@@ -74,6 +71,15 @@ union_transactions = SparkSubmitOperator(
     application=os.path.join(SPARK_DIRECTORY, "union_transactions.py"),
     application_args=['-e', "{0}".format(config[ENVIRONMENT])]
 )
+
+# Test union transactions
+test_union_transactions = BashOperator(
+    task_id='test_union_transactions',
+    bash_command='export ENVIRONMENT={environment} && python -m pytest {directory}{script}'.format(
+        environment=ENVIRONMENT,
+        directory=TESTS_DIRECTORY,
+        script='test_union_transactions.py'),
+    dag=dag)
 
 # Launch Spark Submit job to enrich the transactions
 enrich_transactions = SparkSubmitOperator(
@@ -84,6 +90,15 @@ enrich_transactions = SparkSubmitOperator(
     application_args=['-e', "{0}".format(config[ENVIRONMENT])]
 )
 
+# Test enrich transactions
+test_enrich_transactions = BashOperator(
+    task_id='test_filter_countries',
+    bash_command='export ENVIRONMENT={environment} && python -m pytest {directory}{script}'.format(
+        environment=ENVIRONMENT,
+        directory=TESTS_DIRECTORY,
+        script='test_enrich_transactions.py'),
+    dag=dag)
+
 # Launch a Spark Submit job to filter out unwanted countries
 filter_countries = SparkSubmitOperator(
     dag=dag,
@@ -93,15 +108,18 @@ filter_countries = SparkSubmitOperator(
     application_args=['-e', "{0}".format(config[ENVIRONMENT])]
 )
 
+# Test filter countries
 test_filter_countries = BashOperator(
     task_id='test_filter_countries',
     bash_command='export ENVIRONMENT={environment} && python -m pytest {directory}{script}'.format(
         environment=ENVIRONMENT,
         directory=TESTS_DIRECTORY,
-        spark_directory=SPARK_DIRECTORY,
         script='test_filter_countries.py'),
     dag=dag)
 
 # Set order of tasks
-union_transactions.set_downstream(enrich_transactions)
-enrich_transactions.set_downstream(filter_countries)
+union_transactions.set_downstream(test_union_transactions)
+test_union_transactions.set_downstream(enrich_transactions)
+enrich_transactions.set_downstream(test_enrich_transactions)
+test_enrich_transactions.set_downstream(filter_countries)
+filter_countries.set_downstream(test_filter_countries)

@@ -1,4 +1,4 @@
-def test_absence_known_pi(spark, environment):
+def test_filter_countries(spark, environment):
     spark.sql("USE {0}_app".format(environment)).collect()
 
     # Make sure no North Koreans slipped through the DMZ
