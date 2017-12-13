@@ -82,19 +82,21 @@ WORKDIR ${AIRFLOW_HOME}
 RUN mkdir -p ${AIRFLOW_HOME}/dags
 RUN cd ${AIRFLOW_HOME}/dags && git clone https://github.com/danielvdende/data-testing-with-airflow.git development
 RUN cd ${AIRFLOW_HOME}/dags/development && git checkout development
-
+COPY docker_files/dev.conf ${AIRFLOW_HOME}/dags/development/environment.conf
 # tst
 RUN cd ${AIRFLOW_HOME} && git clone https://github.com/danielvdende/data-testing-with-airflow.git test
 RUN cd ${AIRFLOW_HOME}/test && git checkout test
+COPY docker_files/tst.conf ${AIRFLOW_HOME}/dags/development/environment.conf
 #
 ## acc
 RUN cd ${AIRFLOW_HOME} && git clone https://github.com/danielvdende/data-testing-with-airflow.git acceptance
 RUN cd ${AIRFLOW_HOME}/acceptance && git checkout acceptance
+COPY docker_files/acc.conf ${AIRFLOW_HOME}/dags/development/environment.conf
 #
 ## prd
 RUN cd ${AIRFLOW_HOME} && git clone https://github.com/danielvdende/data-testing-with-airflow.git production
 RUN cd ${AIRFLOW_HOME}/production && git checkout master
-RUN cd ${AIRFLOW_HOME} && ls
+COPY docker_files/prd.conf ${AIRFLOW_HOME}/dags/development/environment.conf
 ENTRYPOINT /entrypoint.sh
 
 
