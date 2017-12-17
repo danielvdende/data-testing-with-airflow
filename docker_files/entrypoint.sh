@@ -97,5 +97,7 @@ else
   sed -i "s#sql_alchemy_conn = postgresql+psycopg2://airflow:airflow@postgres/airflow#sql_alchemy_conn = sqlite:////usr/local/airflow/airflow.db#" "$AIRFLOW_HOME"/airflow.cfg
   echo "Initialize database..."
   $CMD initdb
-  exec $CMD webserver
+  $CMD connections -a --conn-id "spark-default" --conn-uri "local" --conn-extra "{'master': 'local'}"
+  exec $CMD webserver &
+  exec $CMD scheduler
 fi
