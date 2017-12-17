@@ -5,12 +5,13 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
 from airflow.contrib.operators.spark_submit_operator import SparkSubmitOperator
+from airflow.operators.dagrun_operator import TriggerDagRunOperator
 
 # Configuration variables
 THIS_DIRECTORY = os.path.join(os.path.dirname(os.path.realpath(__file__)))
 SPARK_DIRECTORY = THIS_DIRECTORY + '/spark/'
 TESTS_DIRECTORY = THIS_DIRECTORY + '/tests/'
-ENV_CONFIG_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'environment.conf')
+ENV_CONFIG_PATH = THIS_DIRECTORY + '/environment.conf'
 # need to go up to parent dag directory so we can switch to next environment
 DAG_LOCATION = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
@@ -69,7 +70,7 @@ union_transactions = SparkSubmitOperator(
     task_id='union_transactions',
     name="App: union transactions",
     application=os.path.join(SPARK_DIRECTORY, "union_transactions.py"),
-    application_args=['-e', "{0}".format(config[ENVIRONMENT])]
+    application_args=['-e', "{0}".format(ENVIRONMENT)]
 )
 
 # Test union transactions
@@ -87,12 +88,12 @@ enrich_transactions = SparkSubmitOperator(
     task_id='enrich_transactions',
     name="App: enrich transactions",
     application=os.path.join(SPARK_DIRECTORY, "enrich_transactions.py"),
-    application_args=['-e', "{0}".format(config[ENVIRONMENT])]
+    application_args=['-e', "{0}".format(ENVIRONMENT)]
 )
 
 # Test enrich transactions
 test_enrich_transactions = BashOperator(
-    task_id='test_filter_countries',
+    task_id='test_enrich_transactions',
     bash_command='export ENVIRONMENT={environment} && python -m pytest {directory}{script}'.format(
         environment=ENVIRONMENT,
         directory=TESTS_DIRECTORY,
@@ -105,7 +106,7 @@ filter_countries = SparkSubmitOperator(
     task_id='filter_countries',
     name="App: filter countries",
     application=os.path.join(SPARK_DIRECTORY, "filter_countries.py"),
-    application_args=['-e', "{0}".format(config[ENVIRONMENT])]
+    application_args=['-e', "{0}".format(ENVIRONMENT)]
 )
 
 # Test filter countries
@@ -117,21 +118,21 @@ test_filter_countries = BashOperator(
         script='test_filter_countries.py'),
     dag=dag)
 
-# Trigger the next evironment based on current environment
+# Trigger the next environment based on current environment
 if ENVIRONMENT != 'prd':
     if ENVIRONMENT == 'dev':
         trigger_next_environment_deploy = TriggerDagRunOperator(task_id='trigger_next_environment_deploy',
                                                                 python_callable=lambda context, dag_run: dag_run,
                                                                 trigger_dag_id="app_tst",
                                                                 dag=dag)
-        test_filter_countries.set_downstream(trigger_next_environment_deploy)
+        trigger_next_environment_deploy.set_upstream(test_filter_countries)
 
-    if ENVIRONMENT == 'tst':
+    elif ENVIRONMENT == 'tst':
         trigger_next_environment_deploy = TriggerDagRunOperator(task_id='trigger_next_environment_deploy',
                                                                 python_callable=lambda context, dag_run: dag_run,
                                                                 trigger_dag_id="app_acc",
                                                                 dag=dag)
-        test_filter_countries.set_downstream(trigger_next_environment_deploy)
+        trigger_next_environment_deploy.set_upstream(test_filter_countries)
 
 # Set order of tasks
 union_transactions.set_downstream(test_union_transactions)
