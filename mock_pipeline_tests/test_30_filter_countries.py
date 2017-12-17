@@ -9,15 +9,24 @@ def test_filter_countries(spark):
     enrich_transactions(spark, "tst")
     filter_countries(spark, "tst")
 
-    # check that banned countries are gone
+    # check that banned payer countries are gone
     assert spark.sql("""
         SELECT COUNT(*) ct
         FROM filter_countries
-        WHERE country IN (
+        WHERE payer_country IN (
           SELECT country
           FROM countries
           WHERE allowed = false
         )
     """).first().ct == 0
 
-    # check that all transactions with valid countries in them are still in there.
+    # check that banned beneficiary countries are gone
+    assert spark.sql("""
+        SELECT COUNT(*) ct
+        FROM filter_countries
+        WHERE beneficiary_country IN (
+          SELECT country
+          FROM countries
+          WHERE allowed = false
+        )
+    """).first().ct == 0

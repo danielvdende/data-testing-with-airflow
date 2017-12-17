@@ -20,9 +20,9 @@ def enrich_transactions(spark, environment):
             ba.name                             beneficiary_name,
             ba.country                          beneficiary_country
         FROM transactions_union t
-        LEFT JOIN account_info AS pa ON t.payer_account = pa.account
-        LEFT JOIN account info AS ba ON t.beneficiary_account = ba.account
-        """).format(environment).write \
+        LEFT JOIN account_info pa ON t.payer_account = pa.account
+        LEFT JOIN account_info ba ON t.beneficiary_account = ba.account
+        """).write \
         .saveAsTable('enrich_transactions', format='parquet', mode='overwrite')
 
 

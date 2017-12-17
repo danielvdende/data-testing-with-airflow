@@ -3,7 +3,11 @@ python:
   - "3.5"
 jobs:
   include:
-  # todo: add linting stage
+    - stage: linting
+      install:
+        - pip install flake8
+      script:
+        - flake8
     - stage: integrity_tests
       install:
         - pip install -r integrity_tests/requirements.txt

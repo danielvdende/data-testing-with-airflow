@@ -1,7 +1,8 @@
 import os
-import pytest
-import sqlalchemy as sa
-from airflow import configuration, models
+# import pytest
+# import sqlalchemy as sa
+# from airflow import configuration, models
+from airflow import models
 from airflow.utils import db
 
 # pylint:disable=redefined-outer-name

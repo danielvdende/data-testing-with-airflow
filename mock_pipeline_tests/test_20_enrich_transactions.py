@@ -17,14 +17,15 @@ def test_enrich_transactions(spark):
 
     # check that account name is now available for specific accounts (beneficiary side)
     assert spark.sql("""
-        SELECT beneficiary
+        SELECT beneficiary_name
         FROM enrich_transactions
-        WHERE payer_account='NL29ABNA5612457383'
-    """).first().payer_name == "Super mooie laptops BV"
+        WHERE beneficiary_account='NL29ABNA5612457383'
+    """).first().beneficiary_name == "Super mooie laptops BV"
 
     # check that 'non-existent' accounts are not in enriched_transactions
     assert spark.sql("""
         SELECT COUNT(*) ct
         FROM enrich_transactions
-        WHERE payer_account='NL00XXXX0000000000'
+        WHERE payer_account='NL00XXXX0000000000' 
+        OR beneficiary_account = 'NL00XXXX0000000000'
     """).first().ct == 0

@@ -12,7 +12,7 @@ def union_transactions(spark, environment):
     spark.sql("""
         SELECT * FROM transaction_a.transactions
         UNION ALL
-        SELECT * FROM transaction_b.transactions 
+        SELECT * FROM transaction_b.transactions
         """).write \
         .saveAsTable('transactions_union', format='parquet', mode='overwrite')
 
