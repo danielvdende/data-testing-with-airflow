@@ -26,6 +26,6 @@ def test_enrich_transactions(spark):
     assert spark.sql("""
         SELECT COUNT(*) ct
         FROM enrich_transactions
-        WHERE payer_account='NL00XXXX0000000000' 
+        WHERE payer_account='NL00XXXX0000000000'
         OR beneficiary_account = 'NL00XXXX0000000000'
     """).first().ct == 0
