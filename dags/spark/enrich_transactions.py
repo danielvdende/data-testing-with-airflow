@@ -11,17 +11,17 @@ def enrich_transactions(spark, environment):
     # Enrich transactions with account info
     spark.sql("""
         SELECT
-        t.dt                                dt,
-        t.amount                            amount,
-        t.payer_account                     payer_account,
-        pa.name                             payer_name,
-        pa.country                          payer_country,
-        t.beneficiary_account               beneficiary_account,
-        ba.name                             beneficiary_name,
-        ba.country                          beneficiary_country
+            t.dt                                dt,
+            t.amount                            amount,
+            t.payer_account                     payer_account,
+            pa.name                             payer_name,
+            pa.country                          payer_country,
+            t.beneficiary_account               beneficiary_account,
+            ba.name                             beneficiary_name,
+            ba.country                          beneficiary_country
         FROM transactions_union t
-        LEFT JOIN account_info pa ON t.payer_account = pa.account
-        LEFT JOIN account info ba ON t.beneficiary_account = ba.account
+        LEFT JOIN account_info AS pa ON t.payer_account = pa.account
+        LEFT JOIN account info AS ba ON t.beneficiary_account = ba.account
         """).format(environment).write \
         .saveAsTable('enrich_transactions', format='parquet', mode='overwrite')
 

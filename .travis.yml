@@ -3,6 +3,7 @@ python:
   - "3.5"
 jobs:
   include:
+  # todo: add linting stage
     - stage: integrity_tests
       install:
         - pip install -r integrity_tests/requirements.txt

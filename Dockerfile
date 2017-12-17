@@ -100,9 +100,3 @@ COPY docker_files/prd.conf ${AIRFLOW_HOME}/dags/production/dags/environment.conf
 
 RUN ls ${AIRFLOW_HOME}
 ENTRYPOINT /entrypoint.sh
-
-
-#ADD dags/dev/airflowfile.py /usr/local/airflow/dags/
-#ADD dags/tst/airflowfile.py /usr/local/airflow/dags/
-#ADD dags/acc/airflowfile.py /usr/local/airflow/dags/
-#ADD dags/prd/airflowfile.py /usr/local/airflow/dags/

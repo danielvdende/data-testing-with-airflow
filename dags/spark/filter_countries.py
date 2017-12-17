@@ -13,8 +13,8 @@ def filter_countries(spark, environment):
         SELECT
         t.*
         FROM enrich_transactions t
-        LEFT JOIN countries pc ON t.payer_country = pa.country
-        LEFT JOIN countries bc ON t.beneficiary_country = ba.country
+        LEFT JOIN countries pc ON t.payer_country = pc.country
+        LEFT JOIN countries bc ON t.beneficiary_country = bc.country
         WHERE 
         pc.allowed AND bc.allowed
         """).format(environment).write \

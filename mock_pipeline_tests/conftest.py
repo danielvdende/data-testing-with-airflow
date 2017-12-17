@@ -40,7 +40,7 @@ def generate_transactions(number):
     transactions = []
     for x in range(0, number):
         parties = sample(ACCOUNT_INFO_ROWS, 2)
-        transactions.append((date(2017,1,randint(1,31)), parties[0][0], parties[1][0], round(uniform(0, 1000), 2)))
+        transactions.append((date(2017, 1, randint(1, 31)), parties[0][0], parties[1][0], round(uniform(0, 1000), 2)))
     return transactions
 
 
@@ -70,18 +70,18 @@ def populate_account_info(spark):
         ("NK2", "Kim Jong Un Investment", "NK")
     ])
     spark.createDataFrame(account_info_rows, SCHEMA_ACCOUNT_INFO) \
-        .write.saveAsTable('app.account_info', format='parquet', mode='overwrite')
+        .write.saveAsTable('tst_app.account_info', format='parquet', mode='overwrite')
 
 
 def populate_countries(spark):
     countries_rows = spark.sparkContext.parallelize([
-        ("NK", False), # North Korea
-        ("PL", False), # Poland (bank secrecy)
-        ("NL", True),  # Netherlands
-        ("BE", True)   # Belgium
+        ("NK", False),  # North Korea
+        ("PL", False),  # Poland (bank secrecy)
+        ("NL", True),   # Netherlands
+        ("BE", True)    # Belgium
     ])
     spark.createDataFrame(countries_rows, SCHEMA_COUNTRIES) \
-        .write.saveAsTable('app.countries', format='parquet', mode='overwrite')
+        .write.saveAsTable('tst_app.countries', format='parquet', mode='overwrite')
 
 
 @pytest.fixture(scope='session')
@@ -92,7 +92,7 @@ def spark(request):
         .getOrCreate()
 
     # Now populate some tables
-    for database_name in ['app', 'transaction_a', 'transaction_b']:
+    for database_name in ['tst_app', 'transaction_a', 'transaction_b']:
         spark.sql('DROP DATABASE IF EXISTS {0} CASCADE'.format(database_name)).collect()
         spark.sql('CREATE DATABASE {0}'.format(database_name))
 
