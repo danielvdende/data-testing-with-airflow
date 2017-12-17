@@ -61,7 +61,7 @@ dag = DAG(
     'awesome_dag_{}'.format(ENVIRONMENT),
     schedule_interval="@once",
     default_args=default_args,
-    catchup=False
+    catchup=True
 )
 
 # Launch Spark Submit job to union transactions
