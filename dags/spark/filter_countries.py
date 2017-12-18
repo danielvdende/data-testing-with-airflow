@@ -30,6 +30,6 @@ if __name__ == "__main__":
     spark = SparkSession.builder \
         .appName(APP_NAME) \
         .enableHiveSupport() \
-        .config('spark.sql.warehouse.dir', '/usr/local/airflow/spark-warehouse')\
+        .config('spark.sql.warehouse.dir', '/usr/local/airflow/dags/spark-warehouse')\
         .getOrCreate()
     filter_countries(spark, arguments.environment)

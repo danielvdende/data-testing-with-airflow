@@ -128,4 +128,4 @@ COPY docker_files/prd.conf ${AIRFLOW_HOME}/dags/production/dags/environment.conf
 
 RUN ls ${AIRFLOW_HOME}
 ENTRYPOINT /entrypoint.sh
-RUN /usr/spark/bin/spark-submit --master local /populate_tables.py
+RUN cd /usr/local/airflow/dags && /usr/spark/bin/spark-submit --master local /populate_tables.py
