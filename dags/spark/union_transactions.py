@@ -25,6 +25,7 @@ if __name__ == "__main__":
     # Init
     spark = SparkSession.builder \
         .appName(APP_NAME) \
+        .config('spark.sql.warehouse.dir', '/usr/local/airflow/spark-warehouse')\
         .enableHiveSupport() \
         .getOrCreate()
     union_transactions(spark, arguments.environment)
