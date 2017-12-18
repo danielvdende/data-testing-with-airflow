@@ -17,7 +17,7 @@ def spark(request):
     """
     spark = SparkSession.builder \
         .appName(APP_NAME) \
-        .config('spark.sql.warehouse.dir', '/usr/local/airflow/dags/spark-warehouse') \
+        .config('spark.sql.warehouse.dir', '/usr/local/airflow/spark-warehouse') \
         .enableHiveSupport() \
         .getOrCreate()
 

@@ -50,7 +50,7 @@ export PYTHONPATH=/usr/spark/python/:/usr/spark/python/lib/py4j-0.10.4-src.zip:{
 export SPARK_HOME={spark_home} &&\ 
 export ENVIRONMENT={environment} &&\
 export MASTER=local &&\
-cd /usr/local/airflow/dags &&\
+cd /usr/local/airflow &&\
 python -m pytest {directory}{script}
 """
 

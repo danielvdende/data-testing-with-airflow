@@ -96,7 +96,6 @@ RUN mkdir -p /usr/spark/work/ \
 ENV SPARK_MASTER_PORT 7077
 
 COPY docker_files/entrypoint.sh /entrypoint.sh
-COPY docker_files/populate_tables.py /populate_tables.py
 COPY docker_files/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
 
 RUN chown -R airflow: ${AIRFLOW_HOME}
@@ -108,6 +107,7 @@ EXPOSE 8080 5555 8793
 WORKDIR ${AIRFLOW_HOME}
 # dev
 RUN mkdir -p ${AIRFLOW_HOME}/dags
+COPY docker_files/populate_tables.py /usr/local/airflow/populate_tables.py
 RUN cd ${AIRFLOW_HOME}/dags && git clone https://github.com/danielvdende/data-testing-with-airflow.git development
 RUN cd ${AIRFLOW_HOME}/dags/development && git checkout development
 COPY docker_files/dev.conf ${AIRFLOW_HOME}/dags/development/dags/environment.conf
@@ -128,4 +128,4 @@ COPY docker_files/prd.conf ${AIRFLOW_HOME}/dags/production/dags/environment.conf
 
 RUN ls ${AIRFLOW_HOME}
 ENTRYPOINT /entrypoint.sh
-RUN cd /usr/local/airflow/dags && /usr/spark/bin/spark-submit --master local /populate_tables.py
+RUN cd /usr/local/airflow && /usr/spark/bin/spark-submit --master local populate_tables.py
