@@ -85,6 +85,7 @@ def populate_countries(spark, environment):
 
 def spark():
     spark = SparkSession.builder \
+        .config('spark.sql.warehouse.dir', '/usr/local/airflow/spark-warehouse') \
         .enableHiveSupport() \
         .getOrCreate()
 

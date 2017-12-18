@@ -45,6 +45,14 @@ def send_slack_alert(context=None):
     )
     slack_alert.execute(context)
 
+pytest_cmd="""        
+export PYTHONPATH=/usr/spark/python/:/usr/spark/python/lib/py4j-0.10.4-src.zip:{spark_directory} &&\
+export SPARK_HOME={spark_home} &&\ 
+export ENVIRONMENT={environment} &&\
+export MASTER=local &&\
+cd /usr/local/airflow &&\
+python -m pytest {directory}{script}
+"""
 
 default_args = {
     'owner': 'Gandalf and Princess',
@@ -78,13 +86,7 @@ union_transactions = SparkSubmitOperator(
 # Test union transactions
 test_union_transactions = BashOperator(
     task_id='test_union_transactions',
-    bash_command="""
-        export PYTHONPATH=/usr/spark/python/:/usr/spark/python/lib/py4j-0.10.4-src.zip:{spark_directory} &&\
-        export SPARK_HOME={spark_home} &&\ 
-        export ENVIRONMENT={environment} &&\
-        export MASTER=local &&\
-        python -m pytest {directory}{script}
-        """.format(
+    bash_command=pytest_cmd.format(
         environment=ENVIRONMENT,
         directory=TESTS_DIRECTORY,
         spark_directory=SPARK_DIRECTORY,
@@ -105,7 +107,7 @@ enrich_transactions = SparkSubmitOperator(
 # Test enrich transactions
 test_enrich_transactions = BashOperator(
     task_id='test_enrich_transactions',
-    bash_command='export SPARK_HOME={spark_home} && export ENVIRONMENT={environment} && python -m pytest {directory}{script}'.format(
+    bash_command=pytest_cmd.format(
         environment=ENVIRONMENT,
         directory=TESTS_DIRECTORY,
         script='test_enrich_transactions.py',
@@ -125,10 +127,11 @@ filter_countries = SparkSubmitOperator(
 # Test filter countries
 test_filter_countries = BashOperator(
     task_id='test_filter_countries',
-    bash_command='export ENVIRONMENT={environment} && python -m pytest {directory}{script}'.format(
+    bash_command=pytest_cmd.format(
         environment=ENVIRONMENT,
         directory=TESTS_DIRECTORY,
-        script='test_filter_countries.py'),
+        script='test_filter_countries.py',
+        spark_home=SPARK_HOME),
     dag=dag)
 
 # Trigger the next environment based on current environment
