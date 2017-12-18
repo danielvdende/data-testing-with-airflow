@@ -82,6 +82,7 @@ test_union_transactions = BashOperator(
         export PYTHONPATH=/usr/spark/python/:/usr/spark/python/lib/py4j-0.10.4-src.zip:{spark_directory} &&\
         export SPARK_HOME={spark_home} &&\ 
         export ENVIRONMENT={environment} &&\
+        export MASTER=local &&\
         python -m pytest {directory}{script}
         """.format(
         environment=ENVIRONMENT,
