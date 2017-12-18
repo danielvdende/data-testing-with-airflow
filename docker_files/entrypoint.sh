@@ -98,7 +98,7 @@ else
   echo "Initialize database..."
   $CMD initdb
   $CMD connections -h
-  $CMD connections -a --conn_id "spark" --conn_uri 'localhost' --conn_host "local"  # --conn_extra "{'master': 'local', 'spark-home': '/usr/spark'}"
+  $CMD connections -a --conn_id "spark" --conn_uri 'spark://local' --conn_extra '{"master": "local", "spark-home": "/usr/spark"}'
   exec $CMD webserver &
   exec $CMD scheduler
 fi

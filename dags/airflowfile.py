@@ -47,7 +47,7 @@ def send_slack_alert(context=None):
 
 
 default_args = {
-    'owner': 'Gandalf and Princes',
+    'owner': 'Gandalf and Princess',
     'depends_on_past': False,
     'email': ['airflow@airflow.com'],
     'email_on_failure': False,
