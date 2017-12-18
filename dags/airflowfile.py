@@ -79,11 +79,9 @@ union_transactions = SparkSubmitOperator(
 test_union_transactions = BashOperator(
     task_id='test_union_transactions',
     bash_command="""
-        export PYTHONPATH=/usr/spark/python/:\
-        /usr/spark/python/lib/py4j-0.10.4-src.zip:\
-        {spark_directory} &&\
-        export SPARK_HOME={spark_home} && \ 
-        export ENVIRONMENT={environment} && \
+        export PYTHONPATH=/usr/spark/python/:/usr/spark/python/lib/py4j-0.10.4-src.zip:{spark_directory} &&\
+        export SPARK_HOME={spark_home} &&\ 
+        export ENVIRONMENT={environment} &&\
         python -m pytest {directory}{script}
         """.format(
         environment=ENVIRONMENT,
