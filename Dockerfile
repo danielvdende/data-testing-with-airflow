@@ -96,6 +96,7 @@ RUN mkdir -p /usr/spark/work/ \
 ENV SPARK_MASTER_PORT 7077
 
 COPY docker_files/entrypoint.sh /entrypoint.sh
+COPY docker_files/populate_tables.py /populate_tables.py
 COPY docker_files/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
 
 RUN chown -R airflow: ${AIRFLOW_HOME}
@@ -127,3 +128,4 @@ COPY docker_files/prd.conf ${AIRFLOW_HOME}/dags/production/dags/environment.conf
 
 RUN ls ${AIRFLOW_HOME}
 ENTRYPOINT /entrypoint.sh
+RUN /usr/spark/bin/spark-submit --master local /populate_tables.py

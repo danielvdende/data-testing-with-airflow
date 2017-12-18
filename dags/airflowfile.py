@@ -67,6 +67,7 @@ dag = DAG(
 # Launch Spark Submit job to union transactions
 union_transactions = SparkSubmitOperator(
     dag=dag,
+    conn_id='spark',
     task_id='union_transactions',
     name="App: union transactions",
     application=os.path.join(SPARK_DIRECTORY, "union_transactions.py"),
@@ -85,6 +86,7 @@ test_union_transactions = BashOperator(
 # Launch Spark Submit job to enrich the transactions
 enrich_transactions = SparkSubmitOperator(
     dag=dag,
+    conn_id='spark',
     task_id='enrich_transactions',
     name="App: enrich transactions",
     application=os.path.join(SPARK_DIRECTORY, "enrich_transactions.py"),
@@ -103,6 +105,7 @@ test_enrich_transactions = BashOperator(
 # Launch a Spark Submit job to filter out unwanted countries
 filter_countries = SparkSubmitOperator(
     dag=dag,
+    conn_id='spark',
     task_id='filter_countries',
     name="App: filter countries",
     application=os.path.join(SPARK_DIRECTORY, "filter_countries.py"),
