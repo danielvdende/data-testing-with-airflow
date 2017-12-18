@@ -26,7 +26,7 @@ def spark(request):
 
 
 @pytest.fixture(scope="session")
-def get_env(request):
+def environment(request):
     """
     Fixture to pass the environment of the DTAP.
     """
