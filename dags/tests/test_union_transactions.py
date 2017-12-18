@@ -7,20 +7,20 @@ def test_union_transactions(spark, environment):
             COUNT(*) count_transaction_a
         FROM
             transaction_a.transactions
-    """).format(environment).first().count_transaction_a
+    """.format(environment)).first().count_transaction_a
 
     row_count_b = spark.sql("""
         SELECT
             COUNT(*) count_transaction_b
         FROM
             transaction_b.transactions
-    """).format(environment).first().count_transaction_b
+    """.format(environment)).first().count_transaction_b
 
     row_count_union = spark.sql("""
         SELECT
             COUNT(*) count_union
         FROM
             union_transactions
-    """).format(environment).first().count_union
+    """.format(environment)).first().count_union
 
     assert row_count_a + row_count_b == row_count_union
