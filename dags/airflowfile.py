@@ -14,6 +14,7 @@ TESTS_DIRECTORY = THIS_DIRECTORY + '/tests/'
 ENV_CONFIG_PATH = THIS_DIRECTORY + '/environment.conf'
 # need to go up to parent dag directory so we can switch to next environment
 DAG_LOCATION = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+SPARK_HOME='/usr/spark'
 
 with open(ENV_CONFIG_PATH, 'r') as environment_file:
     ENVIRONMENT = environment_file.read().lower().strip()
@@ -77,10 +78,11 @@ union_transactions = SparkSubmitOperator(
 # Test union transactions
 test_union_transactions = BashOperator(
     task_id='test_union_transactions',
-    bash_command='export ENVIRONMENT={environment} && python -m pytest {directory}{script}'.format(
+    bash_command='export SPARK_HOME={spark_home} && export ENVIRONMENT={environment} && python -m pytest {directory}{script}'.format(
         environment=ENVIRONMENT,
         directory=TESTS_DIRECTORY,
-        script='test_union_transactions.py'),
+        script='test_union_transactions.py',
+        spark_home=SPARK_HOME),
     dag=dag)
 
 # Launch Spark Submit job to enrich the transactions
@@ -96,10 +98,11 @@ enrich_transactions = SparkSubmitOperator(
 # Test enrich transactions
 test_enrich_transactions = BashOperator(
     task_id='test_enrich_transactions',
-    bash_command='export ENVIRONMENT={environment} && python -m pytest {directory}{script}'.format(
+    bash_command='export SPARK_HOME={spark_home} && export ENVIRONMENT={environment} && python -m pytest {directory}{script}'.format(
         environment=ENVIRONMENT,
         directory=TESTS_DIRECTORY,
-        script='test_enrich_transactions.py'),
+        script='test_enrich_transactions.py',
+        spark_home=SPARK_HOME),
     dag=dag)
 
 # Launch a Spark Submit job to filter out unwanted countries
