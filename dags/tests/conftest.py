@@ -17,7 +17,8 @@ def spark(request):
     """
     spark = SparkSession.builder \
         .appName(APP_NAME) \
-        .config('spark.sql.warehouse.dir', '/usr/local/airflow/spark-warehouse') \
+        .config('spark.sql.warehouse.dir', '/usr/local/airflow/daniel_spark_warehouse') \
+        .config('spark.hadoop.javax.jdo.option.ConnectionURL', 'jdbc:derby:;databaseName=/usr/local/airflow/daniel_metastore_db;create=true') \
         .enableHiveSupport() \
         .getOrCreate()
 
