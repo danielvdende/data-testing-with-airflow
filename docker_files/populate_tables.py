@@ -86,7 +86,8 @@ def populate_countries(spark, environment):
 def spark():
     spark = SparkSession.builder \
         .config('spark.sql.warehouse.dir', '/usr/local/airflow/spark_warehouse') \
-        .config('spark.hadoop.javax.jdo.option.ConnectionURL', 'jdbc:derby:;databaseName=/usr/local/airflow/metastore_db;create=true') \
+        .config('spark.hadoop.javax.jdo.option.ConnectionURL',
+                'jdbc:derby:;databaseName=/usr/local/airflow/metastore_db;create=true') \
         .enableHiveSupport() \
         .getOrCreate()
 

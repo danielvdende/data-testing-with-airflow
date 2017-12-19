@@ -14,7 +14,7 @@ TESTS_DIRECTORY = THIS_DIRECTORY + '/tests/'
 ENV_CONFIG_PATH = THIS_DIRECTORY + '/environment.conf'
 # need to go up to parent dag directory so we can switch to next environment
 DAG_LOCATION = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-SPARK_HOME='/usr/spark'
+SPARK_HOME = '/usr/spark'
 
 with open(ENV_CONFIG_PATH, 'r') as environment_file:
     ENVIRONMENT = environment_file.read().lower().strip()
@@ -45,14 +45,16 @@ def send_slack_alert(context=None):
     )
     slack_alert.execute(context)
 
-pytest_cmd="""        
+
+pytest_cmd = """
 export PYTHONPATH=/usr/spark/python/:/usr/spark/python/lib/py4j-0.10.4-src.zip:{spark_directory} &&\
-export SPARK_HOME={spark_home} &&\ 
+export SPARK_HOME={spark_home} &&\
 export ENVIRONMENT={environment} &&\
 export MASTER=local &&\
 cd /usr/local/airflow &&\
 python -m pytest {directory}{script}
 """
+
 
 default_args = {
     'owner': 'Gandalf and Princess',
