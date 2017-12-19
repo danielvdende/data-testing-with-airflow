@@ -20,7 +20,7 @@ def test_union_transactions(spark, environment):
         SELECT
             COUNT(*) count_union
         FROM
-            union_transactions
+            transactions_union
     """.format(environment)).first().count_union
 
     assert row_count_a + row_count_b == row_count_union
