@@ -70,7 +70,7 @@ default_args = {
 
 dag = DAG(
     'awesome_dag_{}'.format(ENVIRONMENT),
-    schedule_interval="@once",
+    schedule_interval=None,
     default_args=default_args,
     catchup=True
 )
