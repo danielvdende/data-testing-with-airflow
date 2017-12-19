@@ -35,6 +35,7 @@ if __name__ == "__main__":
     spark = SparkSession.builder \
         .appName(APP_NAME) \
         .enableHiveSupport() \
-        .config('spark.sql.warehouse.dir', '/usr/local/airflow/spark-warehouse')\
+        .config('spark.sql.warehouse.dir', '/usr/local/airflow/spark_warehouse') \
+        .config('spark.hadoop.javax.jdo.option.ConnectionURL', 'jdbc:derby:;databaseName=/usr/local/airflow/metastore_db;create=true') \
         .getOrCreate()
     enrich_transactions(spark, arguments.environment)
