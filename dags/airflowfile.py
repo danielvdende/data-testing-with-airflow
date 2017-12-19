@@ -143,14 +143,14 @@ if ENVIRONMENT != 'prd':
     if ENVIRONMENT == 'dev':
         trigger_next_environment_deploy = TriggerDagRunOperator(task_id='trigger_next_environment_deploy',
                                                                 python_callable=lambda context, dag_run: dag_run,
-                                                                trigger_dag_id="app_tst",
+                                                                trigger_dag_id="awesome_dag_tst",
                                                                 dag=dag)
         trigger_next_environment_deploy.set_upstream(test_filter_countries)
 
     elif ENVIRONMENT == 'tst':
         trigger_next_environment_deploy = TriggerDagRunOperator(task_id='trigger_next_environment_deploy',
                                                                 python_callable=lambda context, dag_run: dag_run,
-                                                                trigger_dag_id="app_acc",
+                                                                trigger_dag_id="awesome_dag_acc",
                                                                 dag=dag)
         trigger_next_environment_deploy.set_upstream(test_filter_countries)
 
