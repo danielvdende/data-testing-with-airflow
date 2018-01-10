@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/danielvdende/data-testing-with-airflow.svg?branch=master)](https://travis-ci.org/danielvdende/data-testing-with-airflow)
 
 This repository contains simple examples of how to implement some of the Nine Circles of Data Tests described in our 
-[blogpost](https://here). A docker container is provided to run the DTAP and Data Tests examples. The Mock Pipeline tests and
+[blogpost](https://medium.com/@ingwbaa/datas-inferno-7-circles-of-data-testing-hell-with-airflow-cef4adff58d8). A docker container is provided to run the DTAP and Data Tests examples. The Mock Pipeline tests and
 DAG integrity tests are implemented in Travis CI tests. 
 
 ## DAG Integrity Tests
