@@ -11,7 +11,7 @@ TEST_ENV_VARS = {
     'AIRFLOW_HOME': TEST_AIRFLOW_HOME
 }
 
-APP_NAME = 'pytest-airflow-dag-integrity-sdp-ingestion-tests'
+APP_NAME = 'pytest-airflow-dag-integrity-tests'
 
 
 def pytest_configure(config):
