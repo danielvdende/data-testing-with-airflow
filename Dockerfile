@@ -49,7 +49,7 @@ RUN set -ex \
     && locale-gen \
     && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
     && useradd -ms /bin/bash -d ${AIRFLOW_HOME} airflow \
-    && python -m pip install -U pip setuptools wheel \
+    && python -m pip install -U pip==9.0.1 setuptools wheel \
     && pip install Cython \
     && pip install pytz \
     && pip install pyOpenSSL \
