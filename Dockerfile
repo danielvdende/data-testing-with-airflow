@@ -10,8 +10,15 @@ FROM python:3.6
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERM linux
 
+# Java
+ARG JAVA_MAJOR_VERSION=8
+ARG JAVA_MINOR_VERSION=181
+
+# Spark
+ARG SPARK_VERSION=2.3.1
+
 # Airflow
-ARG AIRFLOW_VERSION=1.8.2
+ARG AIRFLOW_VERSION=1.9.0
 ARG AIRFLOW_HOME=/usr/local/airflow
 ENV AIRFLOW_HOME=/usr/local/airflow
 
@@ -72,19 +79,19 @@ RUN cd /opt/ \
     --no-cookies \
     --no-check-certificate \
     --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" \
-    "http://download.oracle.com/otn-pub/java/jdk/8u151-b12/e758a0de34e24606bca991d704f6dcbf/jdk-8u151-linux-x64.tar.gz" \
-    -O jdk-8.tar.gz \
-  && tar xzf jdk-8.tar.gz \
-  && rm jdk-8.tar.gz \
-  && update-alternatives --install /usr/bin/java java /opt/jdk1.8.0_151/bin/java 100 \
-  && update-alternatives --install /usr/bin/jar jar /opt/jdk1.8.0_151/bin/jar 100 \
-&& update-alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_151/bin/javac 100
+    "http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-${JAVA_MAJOR_VERSION}u${JAVA_MINOR_VERSION}-linux-x64.tar.gz" \
+    -O jdk-${JAVA_MAJOR_VERSION}.tar.gz \
+  && tar xzf jdk-${JAVA_MAJOR_VERSION}.tar.gz \
+  && rm jdk-${JAVA_MAJOR_VERSION}.tar.gz \
+  && update-alternatives --install /usr/bin/java java /opt/jdk1.${JAVA_MAJOR_VERSION}.0_${JAVA_MINOR_VERSION}/bin/java 100 \
+  && update-alternatives --install /usr/bin/jar jar /opt/jdk1.${JAVA_MAJOR_VERSION}.0_${JAVA_MINOR_VERSION}/bin/jar 100 \
+&& update-alternatives --install /usr/bin/javac javac /opt/jdk1.${JAVA_MAJOR_VERSION}.0_${JAVA_MINOR_VERSION}/bin/javac 100
 # SPARK
 RUN cd /usr/ \
-  && wget "http://apache.mirrors.spacedump.net/spark/spark-2.2.0/spark-2.2.0-bin-hadoop2.7.tgz" \
-  && tar xzf spark-2.2.0-bin-hadoop2.7.tgz \
-  && rm spark-2.2.0-bin-hadoop2.7.tgz \
-  && mv spark-2.2.0-bin-hadoop2.7 spark
+  && wget "http://www-eu.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop2.7.tgz" \
+  && tar xzf spark-${SPARK_VERSION}-bin-hadoop2.7.tgz \
+  && rm spark-${SPARK_VERSION}-bin-hadoop2.7.tgz \
+  && mv spark-${SPARK_VERSION}-bin-hadoop2.7 spark
 
 ENV SPARK_HOME /usr/spark
 ENV SPARK_MAJOR_VERSION 2
