@@ -56,18 +56,7 @@ def populate_transaction_b(spark):
 
 
 def populate_account_info(spark, environment):
-    account_info_rows = spark.sparkContext.parallelize([
-        ("NL99INGB9999999999", "John Muller BV", "NL"),
-        ("NL88RABO8888888888", "Kris Geusebroek NV", "NL"),
-        ("NL29ABNA5612457383", "Super mooie laptops BV", "NL"),
-        ("BE59587979732526", "Ahmet Erdem Belgian Investment", "BE"),
-        ("BE31199386628955", "Vlaamse Patat", "BE"),
-        ("BE29587431928864", "Gauffre Belgique", "BE"),
-        ("PL84109024029551596171791699", "Polski Beat", "PL"),
-        ("PL75109024026862879594797792", "Zywiec", "PL"),
-        ("NK1", "Kim Jong Un Industries", "NK"),
-        ("NK2", "Kim Jong Un Investment", "NK")
-    ])
+    account_info_rows = spark.sparkContext.parallelize(ACCOUNT_INFO_ROWS)
     spark.createDataFrame(account_info_rows, SCHEMA_ACCOUNT_INFO) \
         .write.saveAsTable('{0}_app.account_info'.format(environment), format='parquet', mode='overwrite')
 
