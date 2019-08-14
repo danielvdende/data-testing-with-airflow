@@ -1,4 +1,5 @@
 language: python
+dist: xenial
 python:
   - "3.6"
 jobs:
@@ -17,6 +18,8 @@ jobs:
         - echo "prd" > dags/environment.conf
         - coverage run -m pytest integrity_tests/*
     - stage: mock_pipeline_tests
+      before_install: 
+        - source travis_java_install.sh
       install:
         - pip install -r mock_pipeline_tests/requirements.txt
       script:
