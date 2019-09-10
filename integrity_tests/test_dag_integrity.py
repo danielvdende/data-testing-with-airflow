@@ -21,6 +21,9 @@ def test_dag_integrity(dag_file):
     mod_spec = importlib.util.spec_from_file_location(module_name, module_path)
     module = importlib.util.module_from_spec(mod_spec)
     mod_spec.loader.exec_module(module)
-    assert any(
-        isinstance(var, af_models.DAG)
-        for var in vars(module).values())
+
+    dag_objects = [var for var in vars(module).values() if isinstance(var, af_models.DAG)]
+    assert dag_objects
+
+    for dag in dag_objects:
+        dag.test_cycle()
