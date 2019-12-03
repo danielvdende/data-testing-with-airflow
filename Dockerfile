@@ -12,10 +12,10 @@ ENV TERM linux
 
 # Java
 ARG JAVA_MAJOR_VERSION=8
-ARG JAVA_MINOR_VERSION=181
+ARG JAVA_MINOR_VERSION=231
 
 # Spark
-ARG SPARK_VERSION=2.3.1
+ARG SPARK_VERSION=2.4.4
 
 # Airflow
 ARG AIRFLOW_VERSION=1.9.0
@@ -74,18 +74,17 @@ RUN set -ex \
         /usr/share/doc \
         /usr/share/doc-base
 # Java
+
 RUN cd /opt/ \
   && wget \
     --no-cookies \
     --no-check-certificate \
     --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" \
-    "http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-${JAVA_MAJOR_VERSION}u${JAVA_MINOR_VERSION}-linux-x64.tar.gz" \
-    -O jdk-${JAVA_MAJOR_VERSION}.tar.gz \
-  && tar xzf jdk-${JAVA_MAJOR_VERSION}.tar.gz \
-  && rm jdk-${JAVA_MAJOR_VERSION}.tar.gz \
-  && update-alternatives --install /usr/bin/java java /opt/jdk1.${JAVA_MAJOR_VERSION}.0_${JAVA_MINOR_VERSION}/bin/java 100 \
-  && update-alternatives --install /usr/bin/jar jar /opt/jdk1.${JAVA_MAJOR_VERSION}.0_${JAVA_MINOR_VERSION}/bin/jar 100 \
-&& update-alternatives --install /usr/bin/javac javac /opt/jdk1.${JAVA_MAJOR_VERSION}.0_${JAVA_MINOR_VERSION}/bin/javac 100
+    "https://javadl.oracle.com/webapps/download/AutoDL?BundleId=240718_5b13a193868b4bf28bcb45c792fce896"\
+    -O jre-${JAVA_MAJOR_VERSION}.tar.gz \
+  && tar xzf jre-${JAVA_MAJOR_VERSION}.tar.gz \
+  && rm jre-${JAVA_MAJOR_VERSION}.tar.gz \
+  && update-alternatives --install /usr/bin/java java /opt/jre1.${JAVA_MAJOR_VERSION}.0_${JAVA_MINOR_VERSION}/bin/java 100
 # SPARK
 RUN cd /usr/ \
   && wget "http://www-eu.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop2.7.tgz" \
