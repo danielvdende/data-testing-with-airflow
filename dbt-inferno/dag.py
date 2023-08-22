@@ -3,10 +3,12 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
 from airflow.contrib.operators.spark_submit_operator import SparkSubmitOperator
+from airflow_dbt.operators.dbt_operator import DbtRunOperator
 
 # Configuration variables
 THIS_DIRECTORY = os.path.join(os.path.dirname(os.path.realpath(__file__)))
 SPARK_DIRECTORY = THIS_DIRECTORY + '/spark/'
+DBT_DIRECTORY = THIS_DIRECTORY + '/dbt/'
 TESTS_DIRECTORY = THIS_DIRECTORY + '/tests/'
 ENV_CONFIG_PATH = THIS_DIRECTORY + '/environment.conf'
 # need to go up to parent dag directory so we can switch to next environment
@@ -77,6 +79,14 @@ union_transactions = SparkSubmitOperator(
     name="App: union transactions",
     application=os.path.join(SPARK_DIRECTORY, "union_transactions.py")
 )
+
+dbt_run = DbtRunOperator(
+    dag=dag,
+    task_id='dbt_run',
+    dir=DBT_DIRECTORY
+)
+
+union_transactions >> dbt_run
 
 # # Test union transactions
 # test_union_transactions = BashOperator(

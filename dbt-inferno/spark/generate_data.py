@@ -58,7 +58,7 @@ def populate_transaction_b(spark):
 def populate_account_info(spark):
     account_info_rows = spark.sparkContext.parallelize(ACCOUNT_INFO_ROWS)
     spark.createDataFrame(account_info_rows, SCHEMA_ACCOUNT_INFO) \
-        .write.saveAsTable('tst_app.account_info', format='parquet', mode='overwrite')
+        .write.saveAsTable('bank.account_info', format='parquet', mode='overwrite')
 
 
 def populate_countries(spark):
@@ -69,7 +69,7 @@ def populate_countries(spark):
         ("BE", True)    # Belgium
     ])
     spark.createDataFrame(countries_rows, SCHEMA_COUNTRIES) \
-        .write.saveAsTable('tst_app.countries', format='parquet', mode='overwrite')
+        .write.saveAsTable('bank.countries', format='parquet', mode='overwrite')
 
 
 def run_job(spark):
