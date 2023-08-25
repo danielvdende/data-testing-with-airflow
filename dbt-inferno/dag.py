@@ -3,7 +3,8 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
 from airflow.contrib.operators.spark_submit_operator import SparkSubmitOperator
-from airflow_dbt.operators.dbt_operator import DbtRunOperator
+from airflow_dbt.operators.dbt_operator import DbtRunOperator, DbtTestOperator
+
 
 # Configuration variables
 THIS_DIRECTORY = os.path.join(os.path.dirname(os.path.realpath(__file__)))
@@ -31,7 +32,7 @@ def send_slack_alert(context=None):
 
     slack_cmd = """curl -x proxy:port \
     -X POST \
-    --data-urlencode '{json}' \
+    --data-urlencode '{message}' \
     {url}""".format(**payload_vars)
 
     slack_alert = BashOperator(
@@ -86,7 +87,13 @@ dbt_run = DbtRunOperator(
     dir=DBT_DIRECTORY
 )
 
-union_transactions >> dbt_run
+dbt_test = DbtTestOperator(
+    dag=dag,
+    task_id='dbt_test',
+    dir=DBT_DIRECTORY
+)
+
+union_transactions >> dbt_run >> dbt_test
 
 # # Test union transactions
 # test_union_transactions = BashOperator(
