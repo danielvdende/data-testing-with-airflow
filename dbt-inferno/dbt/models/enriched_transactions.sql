@@ -9,6 +9,6 @@ SELECT
     ba.name                             beneficiary_name,
     ba.country                          beneficiary_country
 FROM bank.transactions_union t
-         LEFT JOIN bank.account_info pa ON t.payer_account = pa.account
-         LEFT JOIN bank.account_info ba ON t.beneficiary_account = ba.account
+LEFT JOIN bank.account_info pa ON t.payer_account = pa.account
+LEFT JOIN bank.account_info ba ON t.beneficiary_account = ba.account
 
