@@ -3,9 +3,7 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
 from airflow.contrib.operators.spark_submit_operator import SparkSubmitOperator
-from airflow_dbt.operators.dbt_operator import DbtRunOperator, DbtTestOperator
-# from airflow.providers.slack.notifications.slack_notifier import send_slack_notification
-
+from airflow.providers.slack.notifications.slack import send_slack_notification
 
 # Configuration variables
 THIS_DIRECTORY = os.path.join(os.path.dirname(os.path.realpath(__file__)))
@@ -19,11 +17,11 @@ default_args = {
     'retries': 1,
     'retry_delay': timedelta(minutes=5),
     'start_date': datetime(2017, 12, 8),
-    # 'on_failure_callback': send_slack_notification(
-    #     text="The task {{ ti.task_id }} failed",
-    #     channel="#alerts",
-    #     username="Chuck Norris"
-    # )
+    'on_failure_callback': send_slack_notification(
+        text="The task {{ ti.task_id }} failed",
+        channel="#alerts",
+        username="Chuck Norris"
+    )
 }
 
 dag = DAG(
@@ -42,7 +40,6 @@ union_transactions = SparkSubmitOperator(
     application=os.path.join(SPARK_DIRECTORY, "union_transactions.py")
 )
 
-# Test union transactions
 test_union_transactions = BashOperator(
     task_id='test_union_transactions',
     bash_command=f"""
@@ -50,16 +47,16 @@ test_union_transactions = BashOperator(
     """,
     dag=dag)
 
-dbt_run = DbtRunOperator(
+dbt_run = BashOperator(
     dag=dag,
     task_id='dbt_run',
-    dir=DBT_DIRECTORY
+    bash_command=f"cd {DBT_DIRECTORY} && dbt run"
 )
 
-dbt_test = DbtTestOperator(
+dbt_test = BashOperator(
     dag=dag,
     task_id='dbt_test',
-    dir=DBT_DIRECTORY
+    bash_command=f"cd {DBT_DIRECTORY} && dbt test"
 )
 
 union_transactions >> test_union_transactions >> dbt_run >> dbt_test
