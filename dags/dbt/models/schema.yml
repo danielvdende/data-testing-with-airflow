@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: enriched_transactions
+    columns:
+      - name: payer_country
+        tests:
+          - not_null
+      - name: beneficiary_country
+        tests:
+          - not_null

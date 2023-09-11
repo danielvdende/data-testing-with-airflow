@@ -1,4 +1,5 @@
-import pytest
+import argparse
+
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, DoubleType, StringType, DateType, BooleanType
 from random import uniform, sample, randint
@@ -59,7 +60,7 @@ def populate_transaction_b(spark):
 def populate_account_info(spark):
     account_info_rows = spark.sparkContext.parallelize(ACCOUNT_INFO_ROWS)
     spark.createDataFrame(account_info_rows, SCHEMA_ACCOUNT_INFO) \
-        .write.saveAsTable('tst_app.account_info', format='parquet', mode='overwrite')
+        .write.saveAsTable('bank.account_info', format='parquet', mode='overwrite')
 
 
 def populate_countries(spark):
@@ -70,18 +71,12 @@ def populate_countries(spark):
         ("BE", True)    # Belgium
     ])
     spark.createDataFrame(countries_rows, SCHEMA_COUNTRIES) \
-        .write.saveAsTable('tst_app.countries', format='parquet', mode='overwrite')
+        .write.saveAsTable('bank.countries', format='parquet', mode='overwrite')
 
 
-@pytest.fixture(scope='session')
-def spark(request):
-    spark = SparkSession.builder \
-        .master('local[*]') \
-        .enableHiveSupport() \
-        .getOrCreate()
-
+def run_job(spark):
     # Now populate some tables
-    for database_name in ['tst_app', 'transaction_a', 'transaction_b']:
+    for database_name in ['tst_app', 'transaction_a', 'transaction_b', 'bank']:
         spark.sql('DROP DATABASE IF EXISTS {0} CASCADE'.format(database_name)).collect()
         spark.sql('CREATE DATABASE {0}'.format(database_name))
 
@@ -91,3 +86,19 @@ def spark(request):
     populate_countries(spark)
 
     return spark
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Generate data')
+    parser.add_argument('--warehouse-path', default='/opt/airflow/spark-warehouse')
+
+    args = parser.parse_args()
+    spark = SparkSession.builder \
+        .config('spark.sql.warehouse.dir', args.warehouse_path) \
+        .config('spark.sql.parquet.compression.codec', 'gzip') \
+        .enableHiveSupport() \
+        .getOrCreate()
+
+    run_job(spark)
+
+    spark.stop()
