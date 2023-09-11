@@ -1,0 +1,37 @@
+name: CI
+on:
+  push
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install flake8
+        run: pip install flake8
+
+      - name: Run flake8
+        run: flake8 dags/
+
+  integrity_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install integrity test requirements
+        run: pip install -r integrity_tests/requirements.txt
+
+      - name: Initialize Airflow DB
+        run: airflow db init
+
+      - name: Run integrity tests
+        run: coverage run -m pytest integrity_tests/*

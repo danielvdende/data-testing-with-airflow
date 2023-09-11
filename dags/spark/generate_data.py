@@ -85,6 +85,7 @@ def run_job(spark):
 
     return spark
 
+
 if __name__ == "__main__":
     spark = SparkSession.builder \
         .config('spark.sql.warehouse.dir', '/opt/airflow/spark-warehouse') \

@@ -5,6 +5,7 @@
 import pytest
 from pyspark.sql import SparkSession
 
+
 @pytest.fixture(scope="session")
 def spark(request):
     """
@@ -20,4 +21,3 @@ def spark(request):
     request.addfinalizer(spark.stop)
 
     return spark
-
