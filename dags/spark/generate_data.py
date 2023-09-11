@@ -1,3 +1,5 @@
+import argparse
+
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, DoubleType, StringType, DateType, BooleanType
 from random import uniform, sample, randint
@@ -87,8 +89,12 @@ def run_job(spark):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Generate data')
+    parser.add_argument('--warehouse-path', default='/opt/airflow/spark-warehouse')
+
+    args = parser.parse_args()
     spark = SparkSession.builder \
-        .config('spark.sql.warehouse.dir', '/opt/airflow/spark-warehouse') \
+        .config('spark.sql.warehouse.dir', args.warehouse_path) \
         .config('spark.sql.parquet.compression.codec', 'gzip') \
         .enableHiveSupport() \
         .getOrCreate()

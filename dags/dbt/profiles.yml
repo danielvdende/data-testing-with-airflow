@@ -11,3 +11,14 @@ transactions:
         "spark.sql.warehouse.dir": "/opt/airflow/spark-warehouse"
         "spark.sql.parquet.compression.codec": "gzip"
         "spark.hadoop.javax.jdo.option.ConnectionURL": "jdbc:derby:;databaseName=/opt/airflow/metastore_db;create=true"
+
+    mock_pipeline:
+      type: spark
+      host: localhost
+      method: session
+      schema: bank
+      server_side_parameters:
+        "spark.databricks.delta.schema.autoMerge.enabled": "True"
+        "spark.sql.warehouse.dir": "/home/runner/work/data-testing-with-airflow/data-testing-with-airflow/spark-warehouse" # For on github runner
+        "spark.sql.parquet.compression.codec": "gzip"
+        "spark.hadoop.javax.jdo.option.ConnectionURL": "jdbc:derby:;databaseName=/home/runner/work/data-testing-with-airflow/data-testing-with-airflow/metastore_db;create=true"
