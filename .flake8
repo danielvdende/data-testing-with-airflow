@@ -1,4 +1,2 @@
 [flake8]
-
-# Hard line limit
 max-line-length = 120
