@@ -11,7 +11,7 @@ DAG_PATH = os.path.join(
     os.path.dirname(__file__), '..', 'dags'
 )
 
-DAG_FILES = [f for f in os.listdir(DAG_PATH) if f.endswith('*.py')]
+DAG_FILES = [f for f in os.listdir(DAG_PATH) if f.endswith('.py')]
 
 
 @pytest.mark.parametrize('dag_file', DAG_FILES)
