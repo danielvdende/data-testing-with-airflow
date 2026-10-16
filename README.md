@@ -1,6 +1,6 @@
 # Data Testing With Airflow
 
-This repository contains simple examples of how to implement the 7 layers of Data Testing Hell as described initially in 2017 in [this blogpost]() and revisited in 2023 during a PyData talk. For reference, the original version of the examples has been tagged with `1.0.0`. The latest code on the main branch here is that of the 2023 version.
+This repository contains simple examples of how to implement the 7 layers of Data Testing Hell as described initially in 2017 in [this blogpost](https://medium.com/@ingwbaa/datas-inferno-7-circles-of-data-testing-hell-with-airflow-cef4adff58d8) and revisited in 2023 during a PyData talk. For reference, the original version of the examples has been tagged with `1.0.0`. The latest code on the main branch here is that of the 2023 version.
 
 There are a few notable differences between the versions:
 1. Dbt is used in the 2023 version to implement the data tests. This is a more modern approach than the original version, which used Spark directly.
